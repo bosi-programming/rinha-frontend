@@ -1,24 +1,19 @@
 import { useState } from "react";
 import "./App.css";
+import { LoadJSON } from "./screens/LoadJson";
 
 function App() {
-  const [count, setCount] = useState(0);
+  // TODO: evoulir para useReducer
+  const [error, setError] = useState("");
+  const [jsonFile, setJSONFile] = useState<TJSON>(null);
+  const [fileName, setFileName] = useState("");
+
+  console.log(jsonFile);
 
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <main>
+      {!jsonFile && <LoadJSON error={error} setError={setError} jsonFile={jsonFile} setJsonFile={setJSONFile} setFileName={setFileName} />}
+    </main>
   );
 }
 
