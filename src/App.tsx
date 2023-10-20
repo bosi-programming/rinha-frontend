@@ -12,7 +12,7 @@ const initialState: State = {
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case ActionTypes.SET_ERROR:
-      return { ...state, error: action.payload.error || '' };
+      return { ...state, error: action.payload.error || '', jsonFile: null };
     case ActionTypes.SET_JSON_FILE:
       return { ...state, jsonFile: action.payload.jsonFile || null, error: '' };
     case ActionTypes.SET_FILE_NAME:
@@ -31,6 +31,13 @@ function App() {
   return (
     <main>
       {!jsonFile && <LoadJSON state={state} dispatch={dispatch} />}
+      {error &&
+        <p
+          id="json-file-error"
+          role="alert"
+        >
+          {error}
+        </p>}
     </main>
   );
 }

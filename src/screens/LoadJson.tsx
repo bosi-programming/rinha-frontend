@@ -9,7 +9,7 @@ interface LoadJSONScreenProps {
 export function LoadJSON({ state, dispatch }: LoadJSONScreenProps) {
   const ref = useRef<HTMLInputElement>(null);
   const { error } = state;
-  // TODO: evoluir para um botão de upload ao invés de input -> usar useRef
+
   return (
     <form>
       <h1>JSON Tree Viewer</h1>
@@ -53,12 +53,6 @@ export function LoadJSON({ state, dispatch }: LoadJSONScreenProps) {
           style={{ display: 'none' }}
           aria-hidden="true"
         />
-        <p
-          id="json-file-error"
-          role="alert"
-        >
-          {error}
-        </p>
       </div>
     </form>
   )
