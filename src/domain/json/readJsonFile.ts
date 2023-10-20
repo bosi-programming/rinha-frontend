@@ -1,32 +1,26 @@
-export function readJsonFile(file: File, setError: (error: string) => void, setJsonFile: (json: TJSON) => void) {
+import React from "react";
+import { progressHandler } from "./progressHandler";
+import { Action, ActionTypes } from "../../App.d";
+
+export function readJsonFile(file: File, dispatch: React.Dispatch<Action>) {
   const jsonFileReader = new FileReader();
 
-  function readerProgressHandler(e: ProgressEvent<FileReader>) {
-    // Will use to show progress bar
-    if (e.lengthComputable) {
-      const percentLoaded = Math.round((e.loaded / e.total) * 100);
-      console.log(percentLoaded);
-    }
-  }
-
   function readerLoadHandler(e: ProgressEvent<FileReader>) {
+    if (!e.target) {
+      dispatch({ type: ActionTypes.SET_ERROR, payload: { error: "Invalid JSON file. Please load a valid JSON file." } });
+      return;
+    }
+
     const fileContent = e.target.result as string;
     try {
       const fileContentNormalized = JSON.stringify(JSON.parse(fileContent), null, 2);
-      globalThis.jsonFileContent = fileContentNormalized;
-      setJsonFile({
-        contentGlobalKey: "jsonFileContent",
-        name: fileName.current,
-      });
-      setError("");
+      dispatch({ type: ActionTypes.SET_JSON_FILE, payload: { jsonFile: fileContentNormalized } });
     } catch (err) {
-      setError("Invalid JSON file. Please load a valid JSON file.");
+      dispatch({ type: ActionTypes.SET_ERROR, payload: { error: "Invalid JSON file. Please load a valid JSON file." } });
     }
   }
 
-  jsonFileReader.addEventListener("progress", readerProgressHandler);
+  jsonFileReader.addEventListener("progress", progressHandler);
   jsonFileReader.addEventListener("load", readerLoadHandler);
   jsonFileReader.readAsText(file, "UTF-8");
-
-  setError("");
 }

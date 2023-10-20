@@ -1,14 +1,12 @@
-import React from "react";
 import { readJsonFile } from "../domain/json/readJsonFile";
+import { Action, State, ActionTypes } from "../App.d";
 
 interface LoadJSONScreenProps {
-  error: string;
-  setError: (error: string) => void;
-  jsonFile: TJSON;
-  setJsonFile: (jsonFile: TJSON) => void;
-  setFileName: (fileName: string) => void;
+  state: State;
+  dispatch: React.Dispatch<Action>;
 }
-export function LoadJSON({ error, setError, setJsonFile, setFileName }: LoadJSONScreenProps) {
+export function LoadJSON({ state, dispatch }: LoadJSONScreenProps) {
+  const { error } = state;
   // TODO: evoluir para um botão de upload ao invés de input -> usar useRef
   return (
     <form>
@@ -32,12 +30,18 @@ export function LoadJSON({ error, setError, setJsonFile, setFileName }: LoadJSON
           onChange={function jsonInputChangeHandler(e) {
             const currentFile = e.target.files ? e.target.files[0] : null;
             if (!currentFile) {
-              setError("Invalid file. Please load a valid JSON file.");
+              dispatch({
+                type: ActionTypes.SET_ERROR,
+                payload: { error: "Invalid file. Please load a valid JSON file." },
+              });
               return;
             }
-            setFileName(currentFile.name);
+            dispatch({
+              type: ActionTypes.SET_FILE_NAME,
+              payload: { fileName: currentFile.name },
+            });
 
-            readJsonFile(currentFile, setError, setJsonFile);
+            readJsonFile(currentFile, dispatch);
           }}
           aria-invalid={error ? "true" : "false"}
           aria-describedby="json-file-error"

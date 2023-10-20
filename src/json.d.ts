@@ -1,4 +1,4 @@
-type TJSON =
+declare type TJSON =
   | string
   | number
   | boolean
