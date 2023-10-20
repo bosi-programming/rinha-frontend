@@ -1,11 +1,13 @@
 import { readJsonFile } from "../domain/json/readJsonFile";
 import { Action, State, ActionTypes } from "../App.d";
+import { useRef } from "react";
 
 interface LoadJSONScreenProps {
   state: State;
   dispatch: React.Dispatch<Action>;
 }
 export function LoadJSON({ state, dispatch }: LoadJSONScreenProps) {
+  const ref = useRef<HTMLInputElement>(null);
   const { error } = state;
   // TODO: evoluir para um botão de upload ao invés de input -> usar useRef
   return (
@@ -15,14 +17,16 @@ export function LoadJSON({ state, dispatch }: LoadJSONScreenProps) {
         Simple JSON Viewer that runs completely on-client. No data exchange
       </p>
       <div>
-        <label
-          tabIndex={0}
-          htmlFor="json-file-upload"
+        <button
+          type="button"
+          onClick={() => ref.current?.click()}
+          aria-label="Load JSON file"
         >
           Load JSON
-        </label>
+        </button>
 
         <input
+          ref={ref}
           id="json-file-upload"
           name="json-file-upload"
           type="file"
@@ -46,6 +50,8 @@ export function LoadJSON({ state, dispatch }: LoadJSONScreenProps) {
           aria-invalid={error ? "true" : "false"}
           aria-describedby="json-file-error"
           aria-errormessage="json-file-error"
+          style={{ display: 'none' }}
+          aria-hidden="true"
         />
         <p
           id="json-file-error"
