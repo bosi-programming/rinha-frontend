@@ -1,0 +1,7 @@
+.line-number {
+  display: inline-block;
+  width: 30px; /* Adjust the width as needed */
+  text-align: right;
+  margin-right: 10px; /* Adjust the right margin as needed */
+  color: #999; /* Color of line numbers */
+}

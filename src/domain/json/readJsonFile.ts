@@ -13,8 +13,8 @@ export function readJsonFile(file: File, dispatch: React.Dispatch<Action>) {
 
     const fileContent = e.target.result as string;
     try {
-      const fileContentNormalized = JSON.stringify(JSON.parse(fileContent), null, 2);
-      dispatch({ type: ActionTypes.SET_JSON_FILE, payload: { jsonFile: fileContentNormalized } });
+      const fileContentObject = JSON.parse(fileContent);
+      dispatch({ type: ActionTypes.SET_JSON_FILE, payload: { jsonFile: fileContentObject } });
     } catch (err) {
       dispatch({ type: ActionTypes.SET_ERROR, payload: { error: "Invalid JSON file. Please load a valid JSON file." } });
     }

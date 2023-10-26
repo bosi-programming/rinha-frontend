@@ -2,6 +2,7 @@ import { useReducer } from "react";
 import "./App.css";
 import { LoadJSON } from "./screens/LoadJson";
 import { ActionTypes, State, Action } from "./App.d";
+import { ShowPage } from "./screens/ShowPage";
 
 const initialState: State = {
   error: '',
@@ -24,13 +25,14 @@ const reducer = (state: State, action: Action) => {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { error, jsonFile, fileName } = state;
+  const { error, jsonFile } = state;
 
   console.log(state);
 
   return (
     <main>
       {!jsonFile && <LoadJSON state={state} dispatch={dispatch} />}
+      {jsonFile && <ShowPage state={state} dispatch={dispatch} />}
       {error &&
         <p
           id="json-file-error"
