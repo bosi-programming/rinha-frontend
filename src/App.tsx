@@ -18,6 +18,8 @@ const reducer = (state: State, action: Action) => {
       return { ...state, jsonFile: action.payload.jsonFile || null, error: '' };
     case ActionTypes.SET_FILE_NAME:
       return { ...state, fileName: action.payload.fileName || '' };
+    case ActionTypes.CLEAR:
+      return { ...initialState };
     default:
       return state;
   }
