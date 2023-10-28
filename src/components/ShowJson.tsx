@@ -1,41 +1,44 @@
 import { useState } from "react";
-import styles from './ShowJson.module.css';
 import { State } from "../App.d";
+import styles from './ShowJson.module.css';
 
-export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: { jsonFile?: State['jsonFile'], index?: number, objectKey?: string, startExpanded?: boolean }) {
+export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: { jsonFile: State['jsonFile'], index?: number, objectKey?: string, startExpanded?: boolean }) {
   const [expanded, setExpanded] = useState(startExpanded);
+  const leftSpacing = 18;
 
   if (typeof jsonFile === 'string' || typeof jsonFile === 'number' || typeof jsonFile === 'boolean' || jsonFile === null) {
     if (objectKey) {
       return (
-        <p>{objectKey}: {jsonFile.toString()}</p>
+        <p className={styles.paragraph} ><span className={styles.keys}>{objectKey}</span>: {jsonFile.toString()}</p>
       );
     }
 
     return (
-      <p>{jsonFile.toString()}</p>
+      <p className={styles.paragraph} >{jsonFile.toString()}</p>
     )
   }
 
   if (Array.isArray(jsonFile) && !expanded) {
     if (index !== undefined) {
       return (
-        <p onClick={() => setExpanded(true)}>{index}: [...]</p>
+        <p className={styles.paragraph} onClick={() => setExpanded(true)}><span className={styles.numbers}>{index}</span>: [...]</p>
       )
     }
     return (
-      <p onClick={() => setExpanded(true)}>[...]</p>
+      <p className={styles.paragraph} onClick={() => setExpanded(true)}>[...]</p>
     )
   }
 
   if (Array.isArray(jsonFile) && expanded) {
     return (
       <>
-        <p onClick={() => setExpanded(false)}>[</p>
-        {jsonFile.map((item, index) => (
-          <ShowJson key={index} jsonFile={item} index={index} />
-        ))}
-        <p onClick={() => setExpanded(false)}>]</p>
+        <p className={`${styles.paragraph} ${styles.markers}`} onClick={() => setExpanded(false)}>[</p>
+        <div className={styles.tabber} style={{ paddingLeft: leftSpacing }}>
+          {jsonFile.map((item, index) => (
+            <ShowJson key={index} jsonFile={item} index={index} />
+          ))}
+        </div>
+        <p className={`${styles.paragraph} ${styles.markers}`} onClick={() => setExpanded(false)}>]</p>
       </>
     )
   }
@@ -43,12 +46,13 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
   if (!expanded) {
     if (objectKey !== undefined || index !== undefined) {
       const prefix = objectKey || index;
+      const className = objectKey ? styles.keys : styles.numbers;
       return (
-        <p onClick={() => setExpanded(true)}>{prefix}: {"{...}"}</p>
+        <p className={styles.paragraph} onClick={() => setExpanded(true)}><span className={className}>{prefix}</span>: {"{...}"}</p>
       )
     }
     return (
-      <p onClick={() => setExpanded(true)}>{"{...}"}</p>
+      <p className={styles.paragraph} onClick={() => setExpanded(true)}>{"{...}"}</p>
     )
   }
 
@@ -56,24 +60,26 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
 
   if (objectKey !== undefined || index !== undefined) {
     const prefix = objectKey || index;
+    const className = objectKey ? styles.keys : styles.numbers;
     return (
       <>
-        <p onClick={() => setExpanded(false)}><span className={styles['line-number']}>{prefix}:</span> {"{"}</p>
-        {jsonKeys.map((key) => (
-          <ShowJson key={key} jsonFile={jsonFile[key]} objectKey={key} />
-        ))}
-        <p onClick={() => setExpanded(false)}>{"}"}</p>
+        <p className={styles.paragraph} onClick={() => setExpanded(false)}><span className={className}>{prefix}</span>:</p>
+        <div className={styles.tabber} style={{ paddingLeft: leftSpacing }}>
+          {jsonKeys.map((key) => (
+            <ShowJson key={key} jsonFile={jsonFile[key]} objectKey={key} />
+          ))}
+        </div>
       </>
     );
   }
 
   return (
     <>
-      <p onClick={() => setExpanded(false)}>{"{"}</p>
+      <p className={styles.paragraph} onClick={() => setExpanded(false)}>{"{"}</p>
       {jsonKeys.map((key) => (
         <ShowJson key={key} jsonFile={jsonFile[key]} objectKey={key} />
       ))}
-      <p onClick={() => setExpanded(false)}>{"}"}</p>
+      <p className={styles.paragraph} onClick={() => setExpanded(false)}>{"}"}</p>
     </>
   );
 }

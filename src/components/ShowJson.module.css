@@ -5,3 +5,25 @@
   margin-right: 10px; /* Adjust the right margin as needed */
   color: #999; /* Color of line numbers */
 }
+
+.tabber {
+  border-left: 1px solid #BFBFBF;
+}
+
+.paragraph {
+  font-size: 16px;
+  margin: 0;
+  padding-top: 16px;
+}
+
+.numbers {
+  color: #BFBFBF;
+}
+
+.markers {
+  color: #F2CAB8;
+}
+
+.keys {
+  color: #4E9590;
+}
