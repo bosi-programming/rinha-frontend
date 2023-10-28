@@ -20,7 +20,6 @@ export function LoadJSON({ state, dispatch }: LoadJSONScreenProps) {
         </p>
         <div>
           <button
-            className={styles.button}
             type="button"
             onClick={() => ref.current?.click()}
             aria-label="Load JSON file"

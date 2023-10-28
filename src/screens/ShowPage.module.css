@@ -1,0 +1,15 @@
+.show-page {
+  margin: auto;
+  width: 50%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-right: 16px;
+}

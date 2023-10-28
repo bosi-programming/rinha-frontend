@@ -19,16 +19,6 @@
   line-height: 30px;
 }
 
-.button {
-  padding: 6px 12px;
-  border-radius: 5px;
-  border: 1px solid #000;
-  opacity: 0.7;
-  background: linear-gradient(180deg, #E4E4E4 0%, #F7F7F7 100%);
-  font-size: 16px;
-  font-weight: 500;
-}
-
 .error {
   margin-top: 24px;
   color: #BF0E0E;

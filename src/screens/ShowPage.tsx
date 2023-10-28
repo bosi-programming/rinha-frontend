@@ -1,5 +1,6 @@
 import { Action, ActionTypes, State } from "../App.d";
 import { ShowJson } from '../components/ShowJson';
+import styles from "./ShowPage.module.css";
 
 interface ShowJSONScreenProps {
   state: State;
@@ -14,11 +15,11 @@ export function ShowPage({ state, dispatch }: ShowJSONScreenProps) {
   }
 
   return (
-    <div>
-      <h1>{fileName}</h1><button onClick={() => dispatch({ type: ActionTypes.CLEAR })}>Back</button>
-      <pre>
-        <ShowJson jsonFile={jsonFile} startExpanded={true} />
-      </pre>
+    <div className={styles['show-page']}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>{fileName}</h1><button onClick={() => dispatch({ type: ActionTypes.CLEAR })}>Back</button>
+      </div>
+      <ShowJson jsonFile={jsonFile} startExpanded={true} />
     </div>
   );
 }
