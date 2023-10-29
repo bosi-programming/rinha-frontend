@@ -11,7 +11,7 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
   const prefixClassName = objectKey ? styles.keys : styles.numbers;
 
   const calculateVisibleItems = useCallback(() => {
-    const jsonKeys = Object.keys(jsonFile);
+    const jsonKeys = Object.keys(jsonFile).sort();
     const items = Array.isArray(jsonFile) ? jsonFile : jsonKeys;
 
     const container = containerRef.current;
