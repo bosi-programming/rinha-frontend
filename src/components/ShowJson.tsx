@@ -17,7 +17,7 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
     const container = containerRef.current;
     if (container) {
       const { offsetHeight } = container;
-      const startIndex = Math.floor(window.scrollY / 34);
+      const startIndex = items.length > 50 ? Math.floor(window.scrollY / 34) : 0;
       const endIndex = Math.min(
         items.length - 1,
         startIndex + 50 + Math.ceil(offsetHeight / 34),
