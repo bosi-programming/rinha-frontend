@@ -7,6 +7,8 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
   const [visibleItems, setVisibleItems] = useState<State['jsonFile'][]>([]);
   const [expanded, setExpanded] = useState(startExpanded);
   const leftSpacing = 18;
+  const prefix = objectKey || index;
+  const prefixClassName = objectKey ? styles.keys : styles.numbers;
 
   const calculateVisibleItems = useCallback(() => {
     const jsonKeys = Object.keys(jsonFile);
@@ -57,9 +59,9 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
   }
 
   if (Array.isArray(jsonFile) && !expanded) {
-    if (index !== undefined) {
+    if (objectKey !== undefined || index !== undefined) {
       return (
-        <p className={styles.paragraph} onClick={() => handleExpand()}><span className={styles.numbers}>{index}</span>: [...]</p>
+        <p className={styles.paragraph} onClick={() => handleExpand()}><span className={prefixClassName}>{prefix}</span>: [...]</p>
       )
     }
     return (
@@ -69,10 +71,8 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
 
   if (!expanded) {
     if (objectKey !== undefined || index !== undefined) {
-      const prefix = objectKey || index;
-      const className = objectKey ? styles.keys : styles.numbers;
       return (
-        <p className={styles.paragraph} onClick={() => handleExpand()}><span className={className}>{prefix}</span>: {"{...}"}</p>
+        <p className={styles.paragraph} onClick={() => handleExpand()}><span className={prefixClassName}>{prefix}</span>: {"{...}"}</p>
       )
     }
     return (
@@ -83,7 +83,7 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
   if (Array.isArray(jsonFile) && expanded) {
     return (
       <>
-        <p className={`${styles.paragraph} ${styles.markers}`} onClick={() => setExpanded(false)}>[</p>
+        <p className={`${styles.paragraph} ${styles.markers}`} onClick={() => setExpanded(false)}>{prefix && <span className={prefixClassName}>{prefix}: </span>}[</p>
         <div className={styles.tabber} ref={containerRef} style={{ paddingLeft: leftSpacing }}>
           {visibleItems.map((item, index) => (
             <ShowJson key={index} jsonFile={item} index={index} />
@@ -111,7 +111,7 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
 
   return (
     <>
-      <p className={styles.paragraph} onClick={() => setExpanded(false)}>{"{"}</p>
+      <p className={styles.paragraph} onClick={() => setExpanded(false)}>{prefix && <span className={prefixClassName}>{prefix}: </span>}{"{"}</p>
       <div className={styles.tabber} ref={containerRef} style={{ paddingLeft: leftSpacing }}>
         {visibleItems.map((key) => (
           <ShowJson key={key} jsonFile={jsonFile[key]} objectKey={key} />
