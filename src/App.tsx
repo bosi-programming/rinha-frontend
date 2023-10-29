@@ -28,6 +28,8 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { jsonFile } = state;
 
+  console.log('state', state);
+
   return (
     <main>
       {!jsonFile && <LoadJSON state={state} dispatch={dispatch} />}

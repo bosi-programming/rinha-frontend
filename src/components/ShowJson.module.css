@@ -8,6 +8,7 @@
 
 .tabber {
   border-left: 1px solid #BFBFBF;
+  height: min-content;
 }
 
 .paragraph {
