@@ -2,11 +2,13 @@ import { useReducer } from "react";
 import { LoadJSON } from "./screens/LoadJson";
 import { ActionTypes, State, Action } from "./App.d";
 import { ShowPage } from "./screens/ShowPage";
+import { Loader } from "./components/Loader";
 
 const initialState: State = {
   error: '',
   jsonFile: null,
   fileName: '',
+  progress: 0,
 };
 
 const reducer = (state: State, action: Action) => {
@@ -17,6 +19,11 @@ const reducer = (state: State, action: Action) => {
       return { ...state, jsonFile: action.payload?.jsonFile || null, error: '' };
     case ActionTypes.SET_FILE_NAME:
       return { ...state, fileName: action.payload?.fileName || '' };
+    case ActionTypes.SET_PROGRESS:
+      if (action.payload?.progress === 100) {
+        return { ...state, progress: 0 };
+      }
+      return { ...state, progress: action.payload?.progress || 0 };
     case ActionTypes.CLEAR:
       return { ...initialState };
     default:
@@ -26,14 +33,13 @@ const reducer = (state: State, action: Action) => {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { jsonFile } = state;
-
-  console.log('state', state);
+  const { jsonFile, progress } = state;
 
   return (
     <main>
-      {!jsonFile && <LoadJSON state={state} dispatch={dispatch} />}
-      {jsonFile && <ShowPage state={state} dispatch={dispatch} />}
+      {!jsonFile && !progress ? <LoadJSON state={state} dispatch={dispatch} /> : null}
+      {jsonFile ? <ShowPage state={state} dispatch={dispatch} /> : null}
+      {progress && progress !== 0 ? <Loader progress={progress} /> : null}
     </main>
   );
 }

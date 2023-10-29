@@ -20,7 +20,7 @@ export function readJsonFile(file: File, dispatch: React.Dispatch<Action>) {
     }
   }
 
-  jsonFileReader.addEventListener("progress", progressHandler);
+  jsonFileReader.addEventListener("progress", (e) => progressHandler(e, dispatch));
   jsonFileReader.addEventListener("load", readerLoadHandler);
   jsonFileReader.readAsText(file, "UTF-8");
 }
