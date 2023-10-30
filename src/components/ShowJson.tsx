@@ -1,12 +1,15 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { State } from "../App.d";
 import styles from './ShowJson.module.css';
 
+const threadhold = 50;
+const leftSpacing = 18;
+const lineHeight = 34;
+const maxItemsToShow = Math.ceil(window.innerHeight / lineHeight) + threadhold;
+
 export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: { jsonFile: State['jsonFile'], index?: number, objectKey?: string, startExpanded?: boolean }) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [visibleItems, setVisibleItems] = useState<State['jsonFile'][]>([]);
   const [expanded, setExpanded] = useState(startExpanded);
-  const leftSpacing = 18;
   const prefix = objectKey || index;
   const prefixClassName = objectKey ? styles.keys : styles.numbers;
 
@@ -14,19 +17,17 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
     const jsonKeys = Object.keys(jsonFile).sort();
     const items = Array.isArray(jsonFile) ? jsonFile : jsonKeys;
 
-    const container = containerRef.current;
-    if (container) {
-      const { offsetHeight } = container;
-      const startIndex = items.length > 50 ? Math.floor(window.scrollY / 34) : 0;
-      const endIndex = Math.min(
-        items.length - 1,
-        startIndex + 50 + Math.ceil(offsetHeight / 34),
+    if (items.length > threadhold) {
+      const endIndex = Math.ceil(
+        threadhold + maxItemsToShow + Math.ceil(window.scrollY / lineHeight)
       );
 
-      const newItems = items.slice(startIndex, endIndex + 1);
+      console.log('endIndex', endIndex);
+
+      const newItems = items.slice(0, endIndex + 1);
       setVisibleItems(newItems);
     } else {
-      const newItems = items.slice(0, 49 + 1);
+      const newItems = items.slice(0, threadhold);
       setVisibleItems(newItems);
     }
   }, [jsonFile]);
@@ -38,8 +39,7 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
     return () => {
       window.removeEventListener('scroll', calculateVisibleItems);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [calculateVisibleItems]);
 
   const handleExpand = () => {
     setExpanded(true);
@@ -84,7 +84,7 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
     return (
       <>
         <p className={`${styles.paragraph} ${styles.markers}`} onClick={() => setExpanded(false)}>{prefix && <span className={prefixClassName}>{prefix}: </span>}[</p>
-        <div className={styles.tabber} ref={containerRef} style={{ paddingLeft: leftSpacing }}>
+        <div className={styles.tabber} style={{ paddingLeft: leftSpacing }}>
           {visibleItems.map((item, index) => (
             <ShowJson key={index} jsonFile={item} index={index} />
           ))}
@@ -100,9 +100,9 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
     return (
       <>
         <p className={styles.paragraph} onClick={() => setExpanded(false)}><span className={className}>{prefix}</span>:</p>
-        <div className={styles.tabber} ref={containerRef} style={{ paddingLeft: leftSpacing }}>
-          {visibleItems.map((key) => (
-            <ShowJson key={key} jsonFile={jsonFile[key]} objectKey={key} />
+        <div className={styles.tabber} style={{ paddingLeft: leftSpacing }}>
+          {visibleItems.map((item, index) => (
+            <ShowJson key={index} jsonFile={jsonFile[item]} objectKey={item} />
           ))}
         </div>
       </>
@@ -112,9 +112,9 @@ export function ShowJson({ jsonFile, index, objectKey, startExpanded = false }: 
   return (
     <>
       <p className={styles.paragraph} onClick={() => setExpanded(false)}>{prefix && <span className={prefixClassName}>{prefix}: </span>}{"{"}</p>
-      <div className={styles.tabber} ref={containerRef} style={{ paddingLeft: leftSpacing }}>
-        {visibleItems.map((key) => (
-          <ShowJson key={key} jsonFile={jsonFile[key]} objectKey={key} />
+      <div className={styles.tabber} style={{ paddingLeft: leftSpacing }}>
+        {visibleItems.map((item, index) => (
+          <ShowJson key={index} jsonFile={jsonFile[item]} objectKey={item} />
         ))}
       </div>
       <p className={styles.paragraph} onClick={() => setExpanded(false)}>{"}"}</p>
